@@ -1,6 +1,8 @@
 #include <windows.h>
 #include <stdio.h>
 
+#define export __declspec(dllexport)
+
 int shared = 0;
 
 void runSubprocess() {
@@ -13,7 +15,7 @@ void runSubprocess() {
   }
 }
 
-__declspec(dllexport) void callDll() {
+export void callDll() {
   HANDLE a = LoadLibrary("a.exe");
   int(*fn)() = GetProcAddress(a, "SPInit");
   printf("value: %d\n", fn());
@@ -36,7 +38,7 @@ BOOL WINAPI DllMain (HINSTANCE dll, DWORD reason, void* reserved) {
   shared += reason;
 }
 
-__declspec(dllexport) int SPInit() {
+export int SPInit() {
   shared += 100;
   return shared;
 }
